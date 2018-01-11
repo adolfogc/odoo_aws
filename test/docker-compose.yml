@@ -1,0 +1,28 @@
+version: '3.2'
+services:
+  db:
+    image: postgres:9.6.6-alpine
+    container_name: odoo-db
+    restart: always
+    volumes:
+      - ~/.docker-volumes/odoo-postgresql/data:/var/lib/postgresql/data
+    environment:
+        - POSTGRES_USER=odoo
+        - POSTGRES_PASSWORD=development
+
+  odoo:
+    build: ..
+    container_name: odoo-app
+    restart: always
+    ports:
+        - "8069:8069"
+    links:
+      - db
+    volumes:
+      - ~/.docker-volumes/odoo/data:/var/lib/odoo:rw
+      - ~/.docker-volumes/odoo/extra-addons:/mnt/extra-addons:ro
+    environment:
+      - POSTGRES_HOST=db
+      - POSTGRES_PORT=5432
+      - POSTGRES_USER=odoo
+      - POSTGRES_PASSWORD=development
