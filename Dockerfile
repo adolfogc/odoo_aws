@@ -75,7 +75,8 @@ RUN set -x \
     && useradd -r odoo \
     && chown -R odoo:odoo /etc/odoo \
     && chown -R odoo:odoo /opt \
-    && chown -R odoo:odoo /mnt/extra-addons
+    && chown -R odoo:odoo /mnt/extra-addons \
+    && chmod -R go-rwx /etc/odoo
 
 USER odoo
 
