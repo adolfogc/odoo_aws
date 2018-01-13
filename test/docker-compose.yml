@@ -6,9 +6,8 @@ services:
     restart: always
     volumes:
       - ~/.docker-volumes/odoo-postgresql/data:/var/lib/postgresql/data
-    environment:
-        - POSTGRES_USER=odoo
-        - POSTGRES_PASSWORD=development
+    env_file:
+        - ./.env
 
   odoo:
     build: ..
@@ -21,6 +20,5 @@ services:
     volumes:
       - ~/.docker-volumes/odoo/data:/var/lib/odoo:rw
       - ~/.docker-volumes/odoo/extra-addons:/mnt/extra-addons:ro
-    environment:
-      - POSTGRES_USER=odoo
-      - POSTGRES_PASSWORD=development
+    env_file:
+        - ./.env
