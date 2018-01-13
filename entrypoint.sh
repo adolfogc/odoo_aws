@@ -1,27 +1,9 @@
 #!/bin/bash
 
+: ${ODOO_DB_HOST:=${POSTGRES_HOST:='db'}}
+: ${ODOO_DB_PORT:=${POSTGRES_PORT:=5432}}
+
 set -e
-
-# set the postgres database host, port, user and password according to the environment
-# and pass them as arguments to the odoo process if not present in the config file
-: ${HOST:=${POSTGRES_HOST:='db'}}
-: ${PORT:=${POSTGRES_PORT:=5432}}
-: ${USER:=${POSTGRES_USER:='odoo'}}
-: ${PASSWORD:=${POSTGRES_PASSWORD:='odoo'}}
-
-DB_ARGS=()
-function check_config() {
-    param="$1"
-    value="$2"
-    if ! grep -q -E "^\s*\b${param}\b\s*=" "$ODOO_RC" ; then
-        DB_ARGS+=("--${param}")
-        DB_ARGS+=("${value}")
-   fi;
-}
-check_config "db_host" "$HOST"
-check_config "db_port" "$PORT"
-check_config "db_user" "$USER"
-check_config "db_password" "$PASSWORD"
 
 case "$1" in
     -- | odoo)
@@ -29,11 +11,15 @@ case "$1" in
         if [[ "$1" == "scaffold" ]] ; then
             exec odoo "$@"
         else
-            exec odoo "$@" "${DB_ARGS[@]}"
+            dockerize \
+            	-template /etc/odoo/odoo.conf.tmpl:/etc/odoo/odoo.conf \
+                -wait tcp://${ODOO_DB_HOST}:${ODOO_DB_PORT} odoo "$@"
         fi
         ;;
     -*)
-        exec odoo "$@" "${DB_ARGS[@]}"
+        dockerize \
+            -template /etc/odoo/odoo.conf.tmpl:/etc/odoo/odoo.conf \
+            -wait tcp://${ODOO_DB_HOST}:${ODOO_DB_PORT} odoo "$@"
         ;;
     *)
         exec "$@"

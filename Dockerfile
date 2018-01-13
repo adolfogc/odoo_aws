@@ -10,7 +10,7 @@ ENV LANG=en_US \
     ODOO_RELEASE=20180111 \
     ODOO_RC=/etc/odoo/odoo.conf
 
-COPY ./odoo.conf /etc/odoo/
+COPY ./odoo.conf.tmpl /etc/odoo/
 COPY ./entrypoint.sh /etc/odoo/
 
 RUN set -x \
@@ -44,9 +44,14 @@ RUN set -x \
     && echo '5e01734c8b2e6429a1ebcc67e2d86d3bb0c4574dd7819a0aff2dca784580e040 tini' | sha256sum -c - \
     && chmod u+x tini \
     && mv tini /usr/bin \
+    && curl -o dockerize.tar.gz -SL https://github.com/jwilder/dockerize/releases/download/v0.6.0/dockerize-linux-amd64-v0.6.0.tar.gz \
+    && echo 'ad838ccaa301d0f331d4729abb4b33c363644dc5749a92467a09d305d348b3b6 dockerize.tar.gz' | sha256sum -c - \
+    && tar -C /usr/local/bin -xf dockerize.tar.gz \
+    && chmod u+x /usr/local/bin/dockerize \
+    && rm dockerize.tar.gz \
     && curl -o wkhtmltox.tar.xz -SL https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.4/wkhtmltox-0.12.4_linux-generic-amd64.tar.xz \
     && echo '049b2cdec9a8254f0ef8ac273afaf54f7e25459a273e27189591edc7d7cf29db wkhtmltox.tar.xz' | sha256sum -c - \
-    && tar xvf wkhtmltox.tar.xz \
+    && tar xf wkhtmltox.tar.xz \
     && cp wkhtmltox/lib/* /usr/local/lib/ \
     && cp wkhtmltox/bin/* /usr/local/bin/ \
     && rm -rf wkhtmltox \

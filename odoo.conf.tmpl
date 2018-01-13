@@ -1,6 +1,10 @@
 [options]
-addons_path = /mnt/extra-addons,/opt/extra-addons,/opt/custom-addons
-data_dir = /var/lib/odoo
+addons_path = {{ default .Env.ODOO_ADDONS_PATH "/mnt/extra-addons,/opt/extra-addons,/opt/custom-addons" }}
+data_dir = {{ default .Env.ODOO_DATA_DIR "/var/lib/odoo" }}
+db_host = {{ default .Env.ODOO_DB_HOST "db" }}
+db_port = {{ default .Env.ODOO_DB_PORT "5432" }}
+db_user = {{ default .Env.ODOO_DB_USER "odoo" }}
+db_password = {{ default .Env.ODOO_DB_PASSWORD "odoo" }}
 ; admin_passwd = admin
 ; csv_internal_sep = ,
 ; db_maxconn = 64
