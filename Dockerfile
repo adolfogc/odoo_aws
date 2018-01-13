@@ -67,7 +67,7 @@ RUN set -x \
     && unzip odoo-s3.zip \
     && mv odoo-s3-master /opt/extra-addons/odoo-s3 \
     && rm odoo-s3.zip \
-    && useradd -r --group --disabled-password odoo \
+    && useradd -r odoo \
     && chown -R odoo:odoo /etc/odoo \
     && chown -R odoo:odoo /opt \
     && chown -R odoo:odoo /mnt/extra-addons
