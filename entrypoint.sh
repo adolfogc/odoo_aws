@@ -2,6 +2,8 @@
 
 : ${ODOO_DB_HOST:=${POSTGRES_HOST:='db'}}
 : ${ODOO_DB_PORT:=${POSTGRES_PORT:=5432}}
+: ${ODOO_DB_USER:=${POSTGRES_USER:='odoo'}}
+: ${ODOO_DB_PASSWORD:=${POSTGRES_PASSWORD:='odoo'}}
 
 set -e
 
