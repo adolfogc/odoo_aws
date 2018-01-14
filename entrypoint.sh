@@ -7,6 +7,11 @@
 
 set -e
 
+export ODOO_DB_HOST
+export ODOO_DB_PORT
+export ODOO_DB_USER
+export ODOO_DB_PASSWORD
+
 case "$1" in
     -- | odoo)
         shift
