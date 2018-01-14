@@ -15,13 +15,13 @@ case "$1" in
         else
             dockerize \
             	-template /etc/odoo/odoo.conf.tmpl:/etc/odoo/odoo.conf \
-                -wait tcp://${ODOO_DB_HOST}:${ODOO_DB_PORT} odoo "$@"
+                odoo "$@"
         fi
         ;;
     -*)
         dockerize \
             -template /etc/odoo/odoo.conf.tmpl:/etc/odoo/odoo.conf \
-            -wait tcp://${ODOO_DB_HOST}:${ODOO_DB_PORT} odoo "$@"
+            odoo "$@"
         ;;
     *)
         exec "$@"
