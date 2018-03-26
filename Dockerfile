@@ -1,13 +1,12 @@
 FROM amazonlinux:latest
 
-MAINTAINER Adolfo E. García <adolfo.garcia.cr@gmail.com>
-
 ENV LANG=en_US \
     LANGUAGE=en_US:en \
     LC_COLLATE=C \
     LC_CTYPE=en_US.UTF-8 \
     ODOO_VERSION=11.0 \
-    ODOO_RELEASE=20180111 \
+    ODOO_RELEASE=20180326 \
+    ODOO_CHECKSUM=cfa27aceca5da1ae31bf383cf43e90e49c4ef791786b7fa002bed1c48741e058 \
     ODOO_RC=/etc/odoo/odoo.conf
 
 COPY ./odoo.conf.tmpl /etc/odoo/
@@ -32,20 +31,22 @@ RUN set -x \
             libXrender \
             xorg-x11-fonts-Type1 \
             xorg-x11-fonts-75dpi \
+            google-noto-sans-fonts \
             nodejs \
             yarn \
+            python35-watchdog \
             python35-devel \
             openldap-devel \
             gcc \
             gcc-c++ \
             unzip \
     && yarn global add less --prefix /usr/local \
-    && curl -o tini -SL https://github.com/krallin/tini/releases/download/v0.16.1/tini-static-amd64 \
-    && echo '5e01734c8b2e6429a1ebcc67e2d86d3bb0c4574dd7819a0aff2dca784580e040 tini' | sha256sum -c - \
+    && curl -o tini -SL https://github.com/krallin/tini/releases/download/v0.17.0/tini-static-amd64 \
+    && echo 'ae93dd6a1aa3cb16a428d91d79518004bced7560e29b620e68d9d48087be7c5b tini' | sha256sum -c - \
     && chmod u+x tini \
     && mv tini /usr/bin \
-    && curl -o dockerize.tar.gz -SL https://github.com/jwilder/dockerize/releases/download/v0.6.0/dockerize-linux-amd64-v0.6.0.tar.gz \
-    && echo 'ad838ccaa301d0f331d4729abb4b33c363644dc5749a92467a09d305d348b3b6 dockerize.tar.gz' | sha256sum -c - \
+    && curl -o dockerize.tar.gz -SL https://github.com/jwilder/dockerize/releases/download/v0.6.1/dockerize-linux-amd64-v0.6.1.tar.gz \
+    && echo '1fa29cd41a5854fd5423e242f3ea9737a50a8c3bcf852c9e62b9eb02c6ccd370 dockerize.tar.gz' | sha256sum -c - \
     && tar -C /usr/local/bin -xf dockerize.tar.gz \
     && chmod u+x /usr/local/bin/dockerize \
     && rm dockerize.tar.gz \
@@ -57,8 +58,8 @@ RUN set -x \
     && rm -rf wkhtmltox \
     && rm wkhtmltox.tar.xz \
     && curl -o odoo.tar.gz -SL https://nightly.odoo.com/11.0/nightly/src/odoo_${ODOO_VERSION}.${ODOO_RELEASE}.tar.gz \
-    && echo 'ab93cad3b5367c351a8dd564caec2478983fc59e9603713895c07028b929b7b4 odoo.tar.gz' | sha256sum -c - \
-    && pip install num2words boto3 \
+    && echo "${ODOO_CHECKSUM} odoo.tar.gz" | sha256sum -c - \
+    && pip install num2words xlwt phonenumbers boto3 pyldap \
     && pip install odoo.tar.gz \
     && rm odoo.tar.gz \
     && chmod u+x /etc/odoo/entrypoint.sh \
@@ -82,7 +83,7 @@ USER odoo
 
 VOLUME ["/var/lib/odoo", "/mnt/extra-addons"]
 
-EXPOSE 8069 8071
+EXPOSE 8069 8071 8072
 
 ENTRYPOINT ["tini", "--", "/etc/odoo/entrypoint.sh"]
 CMD ["odoo"]
