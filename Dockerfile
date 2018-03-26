@@ -20,7 +20,7 @@ RUN set -x \
             python35-setuptools \
     && easy_install-3.5 pip \
     && curl -o /etc/yum.repos.d/yarn.repo https://dl.yarnpkg.com/rpm/yarn.repo \
-    && curl --silent --location https://rpm.nodesource.com/setup_6.x | bash - \
+    && curl --silent --location https://rpm.nodesource.com/setup_9.x | bash - \
     && yum -y --setopt=tsflags=nodocs install \
             fontconfig \
             xz \
@@ -59,7 +59,7 @@ RUN set -x \
     && rm wkhtmltox.tar.xz \
     && curl -o odoo.tar.gz -SL https://nightly.odoo.com/11.0/nightly/src/odoo_${ODOO_VERSION}.${ODOO_RELEASE}.tar.gz \
     && echo "${ODOO_CHECKSUM} odoo.tar.gz" | sha256sum -c - \
-    && pip install num2words xlwt phonenumbers boto3 pyldap \
+    && pip install num2words xlwt phonenumbers boto3 pyldap psycopg2-binary \
     && pip install odoo.tar.gz \
     && rm odoo.tar.gz \
     && chmod u+x /etc/odoo/entrypoint.sh \
