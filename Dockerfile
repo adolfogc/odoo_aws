@@ -5,8 +5,8 @@ ENV LANG=en_US \
     LC_COLLATE=C \
     LC_CTYPE=en_US.UTF-8 \
     ODOO_VERSION=11.0 \
-    ODOO_RELEASE=20180326 \
-    ODOO_CHECKSUM=cfa27aceca5da1ae31bf383cf43e90e49c4ef791786b7fa002bed1c48741e058 \
+    ODOO_RELEASE=20180328 \
+    ODOO_CHECKSUM=92d7c21c14d05bccda2a571c3276ab5314d0263779f1c383984b12d7afde9217 \
     ODOO_RC=/etc/odoo/odoo.conf
 
 COPY ./odoo.conf.tmpl /etc/odoo/
