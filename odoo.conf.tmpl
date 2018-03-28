@@ -3,10 +3,12 @@ addons_path = {{ default .Env.ODOO_ADDONS_PATH "/mnt/extra-addons,/opt/extra-add
 data_dir = {{ default .Env.ODOO_DATA_DIR "/var/lib/odoo" }}
 db_host = {{ default .Env.ODOO_DB_HOST "db" }}
 db_port = {{ default .Env.ODOO_DB_PORT "5432" }}
-db_name = {{ default .Env.ODOO_DB_NAME False }}
+db_name = {{ default .Env.ODOO_DB_NAME "False" }}
 db_user = {{ default .Env.ODOO_DB_USER "odoo" }}
 db_password = {{ default .Env.ODOO_DB_PASSWORD "odoo" }}
-admin_passwd = {{ default .Env.ODOO_ADMIN_PASSWORD "fYtHLVFCnkfPJyk7GEAGB3R42sq86UEgH" }}
+{{ if .Env.ODOO_ADMIN_PASSWORD }}
+admin_passwd = {{ .Env.ODOO_ADMIN_PASSWORD }}
+{{ end }}
 ; csv_internal_sep = ,
 ; db_maxconn = 64
 ; db_template = template1

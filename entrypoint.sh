@@ -14,6 +14,18 @@ export ODOO_DB_NAME
 export ODOO_DB_USER
 export ODOO_DB_PASSWORD
 
+if [ -z ${ODOO_ADMIN_PASSWORD+x} ]; then
+  export ODOO_ADMIN_PASSWORD
+fi
+
+if [ -z ${ODOO_ADDONS_PATH+x} ]; then
+  export ODOO_ADDONS_PATH
+fi
+
+if [ -z ${ODOO_DATA_DIR+x} ]; then
+  export ODOO_DATA_DIR
+fi
+
 case "$1" in
     -- | odoo)
         shift
