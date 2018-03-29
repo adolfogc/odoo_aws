@@ -5,8 +5,8 @@ ENV LANG=en_US \
     LC_COLLATE=C \
     LC_CTYPE=en_US.UTF-8 \
     ODOO_VERSION=11.0 \
-    ODOO_RELEASE=20180328 \
-    ODOO_CHECKSUM=92d7c21c14d05bccda2a571c3276ab5314d0263779f1c383984b12d7afde9217 \
+    ODOO_RELEASE=20180329 \
+    ODOO_CHECKSUM=158d327d0addcf38c3d9fa2a22110f1a840ad23062fdf90287dcd0025fbc5e02 \
     ODOO_RC=/etc/odoo/odoo.conf
 
 COPY ./odoo.conf.tmpl /etc/odoo/
@@ -83,7 +83,7 @@ USER odoo
 
 VOLUME ["/var/lib/odoo", "/mnt/extra-addons"]
 
-EXPOSE 8069 8071 8072
+EXPOSE 8069 8072
 
-ENTRYPOINT ["tini", "--", "/etc/odoo/entrypoint.sh"]
+ENTRYPOINT ["/etc/odoo/entrypoint.sh"]
 CMD ["odoo"]
