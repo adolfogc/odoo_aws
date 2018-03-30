@@ -41,10 +41,6 @@ RUN set -x \
             gcc-c++ \
             unzip \
     && yarn global add less --prefix /usr/local \
-    && curl -o tini -SL https://github.com/krallin/tini/releases/download/v0.17.0/tini-static-amd64 \
-    && echo 'ae93dd6a1aa3cb16a428d91d79518004bced7560e29b620e68d9d48087be7c5b tini' | sha256sum -c - \
-    && chmod u+x tini \
-    && mv tini /usr/bin \
     && curl -o dockerize.tar.gz -SL https://github.com/jwilder/dockerize/releases/download/v0.6.1/dockerize-linux-amd64-v0.6.1.tar.gz \
     && echo '1fa29cd41a5854fd5423e242f3ea9737a50a8c3bcf852c9e62b9eb02c6ccd370 dockerize.tar.gz' | sha256sum -c - \
     && tar -C /usr/local/bin -xf dockerize.tar.gz \
@@ -59,7 +55,7 @@ RUN set -x \
     && rm wkhtmltox.tar.xz \
     && curl -o odoo.tar.gz -SL https://nightly.odoo.com/11.0/nightly/src/odoo_${ODOO_VERSION}.${ODOO_RELEASE}.tar.gz \
     && echo "${ODOO_CHECKSUM} odoo.tar.gz" | sha256sum -c - \
-    && pip install num2words xlwt phonenumbers boto3 pyldap psycopg2-binary \
+    && pip install num2words xlwt phonenumbers boto3 pyldap psycopg2-binary dumb-init \
     && pip install odoo.tar.gz \
     && rm odoo.tar.gz \
     && chmod u+x /etc/odoo/entrypoint.sh \
@@ -85,5 +81,5 @@ VOLUME ["/var/lib/odoo", "/mnt/extra-addons"]
 
 EXPOSE 8069 8072
 
-ENTRYPOINT ["/etc/odoo/entrypoint.sh"]
+ENTRYPOINT ["dumb-init", "--", "/etc/odoo/entrypoint.sh"]
 CMD ["odoo"]
