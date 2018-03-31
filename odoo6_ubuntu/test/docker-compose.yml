@@ -1,0 +1,44 @@
+version: '3.2'
+services:
+  db:
+    image: postgres:9.6-alpine
+    container_name: odoo-db
+    restart: always
+    volumes:
+      - ~/.docker-volumes/odoo-postgresql/data:/var/lib/postgresql/data
+    env_file:
+        - ./test-env
+
+  nginx-proxy:
+    image: nginx:stable-alpine
+    container_name: nginx-proxy
+    restart: always
+    ports:
+      - 80:80
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+
+  odoo-app:
+    image: adolfogc/odoo_aws:6-ubuntu
+    container_name: odoo-app
+    restart: always
+    depends_on:
+      - nginx-proxy
+      - db
+    links:
+      - db
+      - nginx-proxy
+    volumes:
+      - ~/.docker-volumes/odoo/data:/var/lib/odoo:rw
+      - ~/.docker-volumes/odoo/extra-addons:/mnt/extra-addons:ro
+    env_file:
+        - ./test-env
+
+  hello-world:
+    image: strm/helloworld-http
+    container_name: hello-world
+    restart: always
+    depends_on:
+      - nginx-proxy
+    links:
+      - nginx-proxy
