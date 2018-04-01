@@ -66,5 +66,5 @@ VOLUME ["/mnt/extra-addons"]
 EXPOSE 8069 8070
 USER openerp
 
-ENTRYPOINT ["/entrypoint.sh"]
-CMD ["openerp-server"]
+ENTRYPOINT ["dumb-init", "--"]
+CMD ["/entrypoint.sh", "openerp-server"]
