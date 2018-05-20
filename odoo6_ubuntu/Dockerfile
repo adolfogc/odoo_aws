@@ -12,6 +12,7 @@ RUN set -x \
     curl \
     postgresql-client \
     openssl \
+    nfs-common \
     python-setuptools \
     python-zsi \
     python-ldap \
@@ -60,7 +61,9 @@ RUN set -x \
     && chown openerp:openerp /entrypoint.sh \
     && chown -R openerp:openerp /etc/openerp \
     && mkdir -p /mnt/extra-addons \
-    && chown -R openerp:openerp /mnt/extra-addons
+    && chown -R openerp:openerp /mnt/extra-addons \
+    && mkdir -p /mnt/filestore \
+    && chown -R openerp:openerp /mnt/filestore
 
 VOLUME ["/mnt/extra-addons"]
 EXPOSE 8069 8070

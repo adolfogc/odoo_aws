@@ -26,6 +26,12 @@ if [ -z ${ODOO_DATA_DIR+x} ]; then
   export ODOO_DATA_DIR
 fi
 
+if [ -z ${ODOO_AWS_EFS_HOSTNAME} ]; then
+  mkdir -p /mnt/filestore${ODOO_AWS_EFS_PATH}
+  mount -t nfs -o proto=tcp,port=2049 ${ODOO_AWS_EFS_HOSTNAME}:${ODOO_AWS_EFS_PATH} /mnt/filestore${ODOO_AWS_EFS_PATH}
+  export ODOO_FILESTORE /mnt/filstore${ODOO_AWS_EFS_PATH}
+fi
+
 case "$1" in
     -- | openerp-server)
         shift
