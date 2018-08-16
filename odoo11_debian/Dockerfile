@@ -26,8 +26,8 @@ RUN set -x \
     && curl -o wkhtmltox.deb -SL https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.5/wkhtmltox_0.12.5-1.stretch_amd64.deb \
     && echo '1140b0ab02aa6e17346af2f14ed0de807376de475ba90e1db3975f112fbd20bb *wkhtmltox.deb' | sha256sum -c - \
     && dpkg --force-depends -i wkhtmltox.deb \
-    && curl -o odoo.deb -SL http://nightly.odoo.com/${ODOO_VERSION}/nightly/deb/odoo_${ODOO_VERSION}.${ODOO_RELEASE}_all.deb \
-    && echo 'dd9ea8eb7b862c51d73195aa25c9a533fb229516610b8dfa75e78b0ab99142c0 odoo.deb' | sha256sum -c - \
+    && curl -o odoo.deb -SL https://nightly.odoo.com/${ODOO_VERSION}/nightly/deb/odoo_${ODOO_VERSION}.${ODOO_RELEASE}_all.deb \
+    && echo '1b2c9cdf4910d32d3d1c7db3fac53de005143ce06c85e6fd6de9dec034aea093 odoo.deb' | sha256sum -c - \
     && dpkg --force-depends -i odoo.deb \
     && apt-get update \
     && apt-get -y install -f --no-install-recommends \
