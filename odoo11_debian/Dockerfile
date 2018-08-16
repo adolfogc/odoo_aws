@@ -7,7 +7,7 @@ ENV LANG=en_US \
     LC_COLLATE=C \
     LC_CTYPE=en_US.UTF-8 \
     ODOO_VERSION=11.0 \
-    ODOO_RELEASE=20180520 \
+    ODOO_RELEASE=20180816 \
     ODOO_RC=/etc/odoo/odoo.conf
 
 RUN set -x \
@@ -23,14 +23,11 @@ RUN set -x \
         fonts-noto \
         gcc \
         libssl-dev \
-    && curl -o wkhtmltox.tar.xz -SL https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.4/wkhtmltox-0.12.4_linux-generic-amd64.tar.xz \
-    && echo '049b2cdec9a8254f0ef8ac273afaf54f7e25459a273e27189591edc7d7cf29db wkhtmltox.tar.xz' | sha256sum -c - \
-    && tar xvf wkhtmltox.tar.xz \
-    && cp wkhtmltox/lib/* /usr/local/lib/ \
-    && cp wkhtmltox/bin/* /usr/local/bin/ \
-    && cp -r wkhtmltox/share/man/man1 /usr/local/share/man/ \
+    && curl -o wkhtmltox.deb -SL https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.5/wkhtmltox_0.12.5-1.stretch_amd64.deb \
+    && echo '1140b0ab02aa6e17346af2f14ed0de807376de475ba90e1db3975f112fbd20bb *wkhtmltox.deb' | sha256sum -c - \
+    && dpkg --force-depends -i wkhtmltox.deb \
     && curl -o odoo.deb -SL http://nightly.odoo.com/${ODOO_VERSION}/nightly/deb/odoo_${ODOO_VERSION}.${ODOO_RELEASE}_all.deb \
-    && echo '0c3765425c5beb62f9cb9e498138d8ace87ef5b7b5e7dba1dfece2b00322e5e2 odoo.deb' | sha256sum -c - \
+    && echo 'dd9ea8eb7b862c51d73195aa25c9a533fb229516610b8dfa75e78b0ab99142c0 odoo.deb' | sha256sum -c - \
     && dpkg --force-depends -i odoo.deb \
     && apt-get update \
     && apt-get -y install -f --no-install-recommends \
