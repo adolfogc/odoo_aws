@@ -1,4 +1,4 @@
-# Based on https://github.com/odoo/docker/blob/master/11.0/Dockerfile
+# Based on https://github.com/odoo/docker/blob/master/12.0/Dockerfile
 
 FROM debian:stretch
 
@@ -6,7 +6,7 @@ ENV LANG=C.UTF-8 \
     ODOO_VERSION=12.0 \
     ODOO_RELEASE=20181013 \
     ODOO_RC=/etc/odoo/odoo.conf \
-    TINI_VERSION v0.18.0
+    TINI_VERSION=v0.18.0
 
 RUN set -x \
     && apt-get update --fix-missing \
