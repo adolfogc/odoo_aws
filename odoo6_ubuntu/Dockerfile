@@ -12,7 +12,7 @@ RUN set -x \
     curl \
     postgresql-client \
     openssl \
-    nfs-common \
+    s3fs \
     python-setuptools \
     python-zsi \
     python-ldap \

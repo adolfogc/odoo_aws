@@ -32,6 +32,12 @@ if [ -z ${ODOO_AWS_EFS_HOSTNAME} ]; then
   export ODOO_FILESTORE /mnt/filstore${ODOO_AWS_EFS_PATH}
 fi
 
+if [ -z ${S3FS_IDENTITY} ]; then
+  if [ -z ${S3FS_CREDENTIAL} ]; then
+    echo "${S3FS_IDENTITY}:${S3FS_CREDENTIAL}"
+  fi
+fi
+
 case "$1" in
     -- | openerp-server)
         shift
