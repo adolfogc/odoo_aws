@@ -19,7 +19,7 @@ RUN set -x \
         python3-pip \
         python3-setuptools \
         python3-renderpm \
-        python3-watchdog
+        python3-watchdog \
         xz-utils \
         fonts-noto \
         gcc \
