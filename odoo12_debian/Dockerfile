@@ -7,7 +7,7 @@ ENV LANG=en_US \
     LC_COLLATE=C \
     LC_CTYPE=en_US.UTF-8 \
     ODOO_VERSION=12.0 \
-    ODOO_RELEASE=20181011 \
+    ODOO_RELEASE=20181013 \
     ODOO_RC=/etc/odoo/odoo.conf
 
 RUN set -x \
@@ -28,7 +28,7 @@ RUN set -x \
     && echo '1140b0ab02aa6e17346af2f14ed0de807376de475ba90e1db3975f112fbd20bb *wkhtmltox.deb' | sha256sum -c - \
     && dpkg --force-depends -i wkhtmltox.deb \
     && curl -o odoo.deb -SL https://nightly.odoo.com/${ODOO_VERSION}/nightly/deb/odoo_${ODOO_VERSION}.${ODOO_RELEASE}_all.deb \
-    && echo '3f9afa1d6499848fac6d5205748f93840dacb45dd7dd0d15c23b0a8bbde98688 odoo.deb' | sha256sum -c - \
+    && echo '392271f0c7673c8ed5ec3524d03c51e234ca69ef3282a5b05b9f220e832c778a odoo.deb' | sha256sum -c - \
     && dpkg --force-depends -i odoo.deb \
     && apt-get update \
     && apt-get -y install -f --no-install-recommends \
