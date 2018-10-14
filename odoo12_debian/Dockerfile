@@ -38,7 +38,8 @@ COPY ./odoo.conf /etc/odoo/
 ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini-static-amd64 /tini
 
 RUN chown odoo /etc/odoo/odoo.conf \
-    && chmod u+x /entrypoint.sh \
+    && chmod +x /entrypoint.sh \
+    && chown odoo /entrypoint.sh \
     && mkdir -p /mnt/extra-addons \
     && chown -R odoo /mnt/extra-addons \
     && mkdir -p /var/lib/odoo \
