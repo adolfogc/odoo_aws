@@ -4,34 +4,72 @@ FROM debian:stretch
 
 ENV LANG=C.UTF-8 \
     ODOO_VERSION=12.0 \
-    ODOO_RELEASE=20181013 \
+    ODOO_RELEASE=20190619 \
+    ODOO_CHECKSUM=a0cc5b7eea24d65c7501487a6fb6bf079f88ac75baeb1e6b69052ddb31635c5f \
     ODOO_RC=/etc/odoo/odoo.conf \
     TINI_VERSION=v0.18.0
 
-RUN set -x \
-    && apt-get update --fix-missing \
-    && apt-get install -y --no-install-recommends \
+RUN set -x; \
+    echo "Setup apt sources" \
+      && apt-get clean \
+      && rm -rf /var/lib/apt/lists/* \
+      && echo "deb http://deb.debian.org/debian stretch main" > /etc/apt/sources.list \
+      && echo "deb http://deb.debian.org/debian-security/ stretch/updates main" >> /etc/apt/sources.list \
+      && echo "deb http://deb.debian.org/debian stretch-updates main" >> /etc/apt/sources.list \
+      && apt-get update \
+    && echo "Install dependencies with apt-get" \
+      && apt-get install -y --fix-broken --fix-missing --no-install-recommends \
         ca-certificates \
         curl \
-        node-less \
+        dirmngr \
+        fonts-noto-cjk \
+        gnupg \
+        libssl1.0-dev \
         python3-pip \
-        python3-setuptools \
+        python3-pyldap \
+        python3-qrcode \
         python3-renderpm \
+        python3-setuptools \
+        python3-vobject \
         python3-watchdog \
         xz-utils \
-        fonts-noto \
         gcc \
-        libssl1.0-dev \
-    && pip3 install num2words xlwt phonenumbers boto3 \
-    && curl -o wkhtmltox.deb -SL https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.5/wkhtmltox_0.12.5-1.stretch_amd64.deb \
-    && echo '1140b0ab02aa6e17346af2f14ed0de807376de475ba90e1db3975f112fbd20bb *wkhtmltox.deb' | sha256sum -c - \
-    && dpkg --force-depends -i wkhtmltox.deb \
-    && curl -o odoo.deb -SL https://nightly.odoo.com/${ODOO_VERSION}/nightly/deb/odoo_${ODOO_VERSION}.${ODOO_RELEASE}_all.deb \
-    && echo '392271f0c7673c8ed5ec3524d03c51e234ca69ef3282a5b05b9f220e832c778a odoo.deb' | sha256sum -c - \
-    && dpkg --force-depends -i odoo.deb \
-    && apt-get update \
-    && apt-get -y install -f --no-install-recommends \
-    && rm -rf /var/lib/apt/lists/* odoo.deb
+    && echo "Installing dependencies with pip" \
+      && pip3 install num2words xlwt phonenumbers boto3 \
+    && echo "Installing Wkhtmltox" \
+      && curl -o wkhtmltox.deb -SL https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.5/wkhtmltox_0.12.5-1.stretch_amd64.deb \
+      && echo '1140b0ab02aa6e17346af2f14ed0de807376de475ba90e1db3975f112fbd20bb *wkhtmltox.deb' | sha256sum -c - \
+      && dpkg --force-depends -i wkhtmltox.deb \
+    && echo "Installing latest postgresql-client" \
+      && echo 'deb http://apt.postgresql.org/pub/repos/apt/ stretch-pgdg main' > etc/apt/sources.list.d/pgdg.list \
+      && export GNUPGHOME="$(mktemp -d)" \
+      && repokey='B97B0AFCAA1A47F044F244A07FCC7D46ACCC4CF8' \
+      && gpg --batch --keyserver keyserver.ubuntu.com --recv-keys "${repokey}" \
+      && gpg --armor --export "${repokey}" | apt-key add - \
+      && gpgconf --kill all \
+      && rm -rf "$GNUPGHOME" \
+      && apt-get update  \
+      && apt-get install -y postgresql-client \
+    && echo "Installing rtlcss" \
+      && echo "deb http://deb.nodesource.com/node_8.x stretch main" > /etc/apt/sources.list.d/nodesource.list \
+      && export GNUPGHOME="$(mktemp -d)" \
+      && repokey='9FD3B784BC1C6FC31A8A0A1C1655A0AB68576280' \
+      && gpg --batch --keyserver keyserver.ubuntu.com --recv-keys "${repokey}" \
+      && gpg --armor --export "${repokey}" | apt-key add - \
+      && gpgconf --kill all \
+      && rm -rf "$GNUPGHOME" \
+      && apt-get update \
+      && apt-get install -y nodejs \
+      && npm install -g rtlcss \
+      && rm -rf /var/lib/apt/lists/* \
+    && echo "Installing Odoo" \
+      && curl -o odoo.deb -SL https://nightly.odoo.com/${ODOO_VERSION}/nightly/deb/odoo_${ODOO_VERSION}.${ODOO_RELEASE}_all.deb \
+      && echo '${ODOO_CHECKSUM} odoo.deb' | sha256sum -c - \
+      && dpkg --force-depends -i odoo.deb \
+    && echo "Cleaning up" \
+      && apt-get update \
+      && apt-get -y install -f --no-install-recommends \
+      && rm -rf /var/lib/apt/lists/* odoo.deb
 
 COPY ./entrypoint.sh /
 COPY ./odoo.conf /etc/odoo/
