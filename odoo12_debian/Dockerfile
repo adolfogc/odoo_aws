@@ -49,7 +49,7 @@ RUN set -x; \
       && gpgconf --kill all \
       && rm -rf "$GNUPGHOME" \
       && apt-get update  \
-      && apt-get install -y postgresql-client \
+      && apt-get install --fix-broken --fix-missing -y postgresql-client-11 \
     && echo "Installing rtlcss" \
       && echo "deb http://deb.nodesource.com/node_8.x stretch main" > /etc/apt/sources.list.d/nodesource.list \
       && export GNUPGHOME="$(mktemp -d)" \
