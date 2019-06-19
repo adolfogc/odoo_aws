@@ -16,6 +16,7 @@ RUN set -x; \
       && echo "deb http://deb.debian.org/debian stretch main" > /etc/apt/sources.list \
       && echo "deb http://deb.debian.org/debian-security/ stretch/updates main" >> /etc/apt/sources.list \
       && echo "deb http://deb.debian.org/debian stretch-updates main" >> /etc/apt/sources.list \
+      && echo "deb http://deb.debian.org/debian stretch-backports main" >> /etc/apt/sources.list \
       && apt-get update \
     && echo "Install dependencies with apt-get" \
       && apt-get install -y --fix-broken --fix-missing --no-install-recommends \
@@ -49,7 +50,7 @@ RUN set -x; \
       && gpgconf --kill all \
       && rm -rf "$GNUPGHOME" \
       && apt-get update  \
-      && apt-get install --fix-broken --fix-missing -y postgresql-client-11 \
+      && apt-get install --fix-broken --fix-missing -y postgresql-client \
     && echo "Installing rtlcss" \
       && echo "deb http://deb.nodesource.com/node_8.x stretch main" > /etc/apt/sources.list.d/nodesource.list \
       && export GNUPGHOME="$(mktemp -d)" \
