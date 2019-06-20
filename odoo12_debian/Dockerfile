@@ -1,6 +1,5 @@
 # Based on https://github.com/odoo/docker/blob/master/12.0/Dockerfile
-
-FROM debian:stretch
+FROM python:3.7-slim-stretch
 
 ENV LANG=C.UTF-8 \
     ODOO_VERSION=12.0 \
@@ -11,7 +10,6 @@ ENV LANG=C.UTF-8 \
 
 RUN set -x; \
     echo "Setup apt sources" \
-      && apt-get clean \
       && rm -rf /var/lib/apt/lists/* \
       && echo "deb http://deb.debian.org/debian stretch main" > /etc/apt/sources.list \
       && echo "deb http://deb.debian.org/debian-security/ stretch/updates main" >> /etc/apt/sources.list \
@@ -35,12 +33,21 @@ RUN set -x; \
         python3-watchdog \
         xz-utils \
         gcc \
+        fontconfig \
+        libx11-6 \
+        libxcb1 \
+        libxext6 \
+        libxrender1 \
+        xfonts-75dpi \
+        xfonts-base \
     && echo "Installing dependencies with pip" \
-      && pip3 install num2words xlwt phonenumbers boto3 \
+      && pip3 install --upgrade pip \
+      && pip3 --no-cache-dir install wheel num2words xlwt phonenumbers boto3 \
     && echo "Installing Wkhtmltox" \
       && curl -o wkhtmltox.deb -SL https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.5/wkhtmltox_0.12.5-1.stretch_amd64.deb \
       && echo '1140b0ab02aa6e17346af2f14ed0de807376de475ba90e1db3975f112fbd20bb *wkhtmltox.deb' | sha256sum -c - \
       && dpkg --force-depends -i wkhtmltox.deb \
+      && apt --fix-broken install \
     && echo "Installing latest postgresql-client" \
       && echo 'deb http://apt.postgresql.org/pub/repos/apt/ stretch-pgdg main' > etc/apt/sources.list.d/pgdg.list \
       && export GNUPGHOME="$(mktemp -d)" \
@@ -50,7 +57,7 @@ RUN set -x; \
       && gpgconf --kill all \
       && rm -rf "$GNUPGHOME" \
       && apt-get update  \
-      && apt-get install --fix-broken --fix-missing -y postgresql-client \
+      && apt-get install -y postgresql-client-11 \
     && echo "Installing rtlcss" \
       && echo "deb http://deb.nodesource.com/node_8.x stretch main" > /etc/apt/sources.list.d/nodesource.list \
       && export GNUPGHOME="$(mktemp -d)" \
@@ -65,7 +72,7 @@ RUN set -x; \
       && rm -rf /var/lib/apt/lists/* \
     && echo "Installing Odoo" \
       && curl -o odoo.deb -SL https://nightly.odoo.com/${ODOO_VERSION}/nightly/deb/odoo_${ODOO_VERSION}.${ODOO_RELEASE}_all.deb \
-      && echo '${ODOO_CHECKSUM} odoo.deb' | sha256sum -c - \
+      && echo "${ODOO_CHECKSUM} odoo.deb" | sha256sum -c - \
       && dpkg --force-depends -i odoo.deb \
     && echo "Cleaning up" \
       && apt-get update \
