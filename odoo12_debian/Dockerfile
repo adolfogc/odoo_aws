@@ -3,8 +3,8 @@ FROM python:3.7-slim-stretch
 
 ENV LANG=C.UTF-8 \
     ODOO_VERSION=12.0 \
-    ODOO_RELEASE=20190619 \
-    ODOO_CHECKSUM=a0cc5b7eea24d65c7501487a6fb6bf079f88ac75baeb1e6b69052ddb31635c5f \
+    ODOO_RELEASE=20190627 \
+    ODOO_CHECKSUM=ae7a55fcf952c8a9ee7bb176bb001b44cff6b8666b3d38d69e1593952e9fafaa\
     ODOO_RC=/etc/odoo/odoo.conf \
     TINI_VERSION=v0.18.0
 
